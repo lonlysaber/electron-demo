@@ -14,9 +14,13 @@
     "appId": "com.demo.electron",
     "productName": "ElectronApp",
     "files": [
+      "package.json",
       "dist",
-      "dist-electron/**/*"
+      "dist-electron"
     ],
+    "directories": {
+      "output": "release"
+    },
     "win": {
       "target": [
         "nsis"

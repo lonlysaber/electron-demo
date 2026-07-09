@@ -1,17 +1,18 @@
-import { BrowserWindow, app } from "electron";
+import { BrowserWindow as e, app as t } from "electron";
+import n from "path";
+import { fileURLToPath as r } from "url";
 //#region electron/index.ts
-var createMainWindow = () => {
-	const win = new BrowserWindow({
+var i = n.dirname(r(import.meta.url));
+t.whenReady().then(() => {
+	let r = new e({
 		width: 800,
 		height: 600,
 		webPreferences: {
-			contextIsolation: false,
-			nodeIntegration: true
+			contextIsolation: !1,
+			nodeIntegration: !0
 		}
 	});
-	win.loadURL("http://localhost:5173");
-	win.webContents.openDevTools();
-};
-app.whenReady().then(createMainWindow);
+	t.isPackaged ? r.loadFile(n.join(i, "../dist/index.html")) : r.loadURL("http://localhost:5173");
+});
 //#endregion
 export {};
