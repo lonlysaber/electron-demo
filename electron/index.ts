@@ -37,29 +37,76 @@ ipcMain.handle("fs/getRootDirectories", async (): Promise<FileItem[]> => {
     const platform = process.platform;
     const roots: FileItem[] = [];
     if (platform === "win32") {
-      const drives = await fs.promises.readdir("C:\\");
-      for (const drive of drives) {
-        if (/^[A-Za-z]:$/.test(drive)) {
-          const drivePath = `${drive}\\`;
-          try {
-            const stat = await fs.promises.stat(drivePath);
-            roots.push({
-              name: drivePath,
-              path: drivePath,
-              type: "directory",
-              size: stat.size,
-              mtime: stat.mtime.getTime(),
-            });
-          } catch {
-            roots.push({
-              name: drivePath,
-              path: drivePath,
-              type: "directory",
-              size: 0,
-              mtime: Date.now(),
-            });
-          }
+      const drives = [];
+      for (let i = 65; i <= 90; i++) {
+        const drive = String.fromCharCode(i) + ":";
+        const drivePath = `${drive}\\`;
+        try {
+          await fs.promises.access(drivePath);
+          drives.push(drive);
+        } catch {
+          continue;
         }
+      }
+      for (const drive of drives) {
+        const drivePath = `${drive}\\`;
+        try {
+          const stat = await fs.promises.stat(drivePath);
+          roots.push({
+            name: drivePath,
+            path: drivePath,
+            type: "directory",
+            size: stat.size,
+            mtime: stat.mtime.getTime(),
+          });
+        } catch {
+          roots.push({
+            name: drivePath,
+            path: drivePath,
+            type: "directory",
+            size: 0,
+            mtime: Date.now(),
+          });
+        }
+      }
+    } else if (platform === "darwin") {
+      const rootPath = "/";
+      const homeDir = os.homedir();
+      try {
+        const rootStat = await fs.promises.stat(rootPath);
+        roots.push({
+          name: "/",
+          path: rootPath,
+          type: "directory",
+          size: rootStat.size,
+          mtime: rootStat.mtime.getTime(),
+        });
+      } catch {
+        roots.push({
+          name: "/",
+          path: rootPath,
+          type: "directory",
+          size: 0,
+          mtime: Date.now(),
+        });
+      }
+      try {
+        const homeStat = await fs.promises.stat(homeDir);
+        roots.push({
+          name: path.basename(homeDir),
+          path: homeDir,
+          type: "directory",
+          size: homeStat.size,
+          mtime: homeStat.mtime.getTime(),
+        });
+      } catch {
+        roots.push({
+          name: path.basename(homeDir),
+          path: homeDir,
+          type: "directory",
+          size: 0,
+          mtime: Date.now(),
+        });
       }
     } else {
       const homeDir = os.homedir();

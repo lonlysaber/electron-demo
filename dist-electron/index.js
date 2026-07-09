@@ -26,8 +26,16 @@ n.handle("fs/readDirectory", async (e, t) => {
 	try {
 		let e = process.platform, t = [];
 		if (e === "win32") {
-			let e = await o.promises.readdir("C:\\");
-			for (let n of e) if (/^[A-Za-z]:$/.test(n)) {
+			let e = [];
+			for (let t = 65; t <= 90; t++) {
+				let n = String.fromCharCode(t) + ":", r = `${n}\\`;
+				try {
+					await o.promises.access(r), e.push(n);
+				} catch {
+					continue;
+				}
+			}
+			for (let n of e) {
 				let e = `${n}\\`;
 				try {
 					let n = await o.promises.stat(e);
@@ -47,6 +55,44 @@ n.handle("fs/readDirectory", async (e, t) => {
 						mtime: Date.now()
 					});
 				}
+			}
+		} else if (e === "darwin") {
+			let e = s.homedir();
+			try {
+				let e = await o.promises.stat("/");
+				t.push({
+					name: "/",
+					path: "/",
+					type: "directory",
+					size: e.size,
+					mtime: e.mtime.getTime()
+				});
+			} catch {
+				t.push({
+					name: "/",
+					path: "/",
+					type: "directory",
+					size: 0,
+					mtime: Date.now()
+				});
+			}
+			try {
+				let n = await o.promises.stat(e);
+				t.push({
+					name: i.basename(e),
+					path: e,
+					type: "directory",
+					size: n.size,
+					mtime: n.mtime.getTime()
+				});
+			} catch {
+				t.push({
+					name: i.basename(e),
+					path: e,
+					type: "directory",
+					size: 0,
+					mtime: Date.now()
+				});
 			}
 		} else {
 			let e = s.homedir(), n = await o.promises.stat(e);

@@ -14,5 +14,11 @@ export interface WindowState {
   y: number;
   width: number;
   height: number;
+  isMinimized: boolean;
+  isMaximized: boolean;
+  prevX?: number;
+  prevY?: number;
+  prevWidth?: number;
+  prevHeight?: number;
   zIndex: number;
 }

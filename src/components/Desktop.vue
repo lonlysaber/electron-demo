@@ -24,6 +24,8 @@ const openWindow = (title: string, initialPath?: string) => {
     y: 50 + windows.value.length * 30,
     width: 800,
     height: 500,
+    isMinimized: false,
+    isMaximized: false,
     zIndex: nextZIndex++,
   };
   windows.value.push(window);
@@ -31,6 +33,36 @@ const openWindow = (title: string, initialPath?: string) => {
 
 const closeWindow = (id: number) => {
   windows.value = windows.value.filter((w) => w.id !== id);
+};
+
+const minimizeWindow = (id: number) => {
+  const window = windows.value.find((w) => w.id === id);
+  if (window) {
+    window.isMinimized = true;
+  }
+};
+
+const maximizeWindow = (id: number) => {
+  const window = windows.value.find((w) => w.id === id);
+  if (window) {
+    if (!window.isMaximized) {
+      window.prevX = window.x;
+      window.prevY = window.y;
+      window.prevWidth = window.width;
+      window.prevHeight = window.height;
+      window.x = 0;
+      window.y = 0;
+      window.width = window.innerWidth;
+      window.height = window.innerHeight;
+      window.isMaximized = true;
+    } else {
+      if (window.prevX !== undefined) window.x = window.prevX;
+      if (window.prevY !== undefined) window.y = window.prevY;
+      if (window.prevWidth !== undefined) window.width = window.prevWidth;
+      if (window.prevHeight !== undefined) window.height = window.prevHeight;
+      window.isMaximized = false;
+    }
+  }
 };
 
 const moveWindow = (id: number, x: number, y: number) => {
@@ -83,6 +115,8 @@ onMounted(async () => {
       :key="window.id"
       :window="window"
       @close="closeWindow"
+      @minimize="minimizeWindow"
+      @maximize="maximizeWindow"
       @move="moveWindow"
       @focus="focusWindow"
     >
@@ -92,6 +126,40 @@ onMounted(async () => {
         @open-directory="openWindow($event.name, $event.path)"
       />
     </Window>
+    <div class="dock">
+      <button class="dock-item" @click="openWindow('文件资源管理器')">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <path
+            d="M40 12H24l-4-4H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V16c0-2.21-1.79-4-4-4z"
+            fill="#4caf50"
+          />
+          <path d="M40 16H12v-4l4-4h24v8z" fill="rgba(255,255,255,0.3)" />
+        </svg>
+      </button>
+      <button class="dock-item">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <circle cx="24" cy="24" r="20" fill="#607d8b" />
+          <path
+            d="M24 8v16M24 32v8M8 24h16M32 24h8"
+            stroke="rgba(255,255,255,0.8)"
+            stroke-width="3"
+            fill="none"
+          />
+          <circle cx="24" cy="24" r="6" fill="#90a4ae" />
+        </svg>
+      </button>
+      <button class="dock-item">
+        <svg viewBox="0 0 48 48" width="48" height="48">
+          <circle cx="24" cy="24" r="20" fill="#e91e63" />
+          <path
+            d="M24 12v24M12 24h24"
+            stroke="rgba(255,255,255,0.8)"
+            stroke-width="3"
+            fill="none"
+          />
+        </svg>
+      </button>
+    </div>
   </div>
 </template>
 
