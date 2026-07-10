@@ -1,5 +1,8 @@
 # Vue 3 + TypeScript + Vite
 
-This template should help get you started developing with Vue 3 and TypeScript in Vite. The template uses Vue 3 `<script setup>` SFCs, check out the [script setup docs](https://v3.vuejs.org/api/sfc-script-setup.html#sfc-script-setup) to learn more.
+electron-demo
+模拟桌面，展示桌面上的文件或者文件夹，
+交互功能是点击打开文件和文件夹展示文件夹内容
 
-Learn more about the recommended Project Setup and IDE Support in the [Vue Docs TypeScript Guide](https://vuejs.org/guide/typescript/overview.html#project-setup).
+产物在release下面
+mac优先装ElectronApp-0.0.0.dmg，有低版本兼容
