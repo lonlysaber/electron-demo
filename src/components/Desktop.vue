@@ -6,7 +6,7 @@ import DesktopIcon from "./DesktopIcon.vue";
 import Window from "./Window.vue";
 import FileExplorer from "./FileExplorer.vue";
 
-const { readDirectory, getDesktopPath, getPlatform, openFile } =
+const { readDirectory, getDesktopPath, getHomePath, getPlatform, openFile } =
   useFileSystem();
 
 const desktopItems = ref<FileItem[]>([]);
@@ -93,6 +93,16 @@ const handleOpenFile = (item: FileItem) => {
   openFile(item.path);
 };
 
+const openFileExplorer = async () => {
+  let initialPath: string;
+  if (platform.value === "darwin") {
+    initialPath = await getHomePath();
+  } else {
+    initialPath = await getDesktopPath();
+  }
+  openWindow('文件资源管理器', initialPath);
+};
+
 onMounted(async () => {
   platform.value = await getPlatform();
   const desktopPath = await getDesktopPath();
@@ -127,7 +137,7 @@ onMounted(async () => {
       />
     </Window>
     <div class="dock">
-      <button class="dock-item" @click="openWindow('文件资源管理器')">
+      <button class="dock-item" @click="openFileExplorer()">
         <svg viewBox="0 0 48 48" width="48" height="48">
           <path
             d="M40 12H24l-4-4H8c-2.21 0-4 1.79-4 4v24c0 2.21 1.79 4 4 4h32c2.21 0 4-1.79 4-4V16c0-2.21-1.79-4-4-4z"
