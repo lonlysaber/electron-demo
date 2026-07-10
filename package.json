@@ -28,10 +28,17 @@
     },
     "mac": {
       "target": [
-        "dmg"
+        {
+          "target": "dmg",
+          "arch": ["x64", "arm64"]
+        }
       ],
       "identity": null,
-      "notarize": false
+      "notarize": false,
+      "minimumSystemVersion": "10.15.0",
+      "hardenedRuntime": false,
+      "entitlements": null,
+      "entitlementsInherit": null
     }
   },
   "dependencies": {
@@ -42,8 +49,8 @@
     "@types/node": "^24.13.2",
     "@vitejs/plugin-vue": "^6.0.7",
     "@vue/tsconfig": "^0.9.1",
-    "electron": "^43.1.0",
-    "electron-builder": "^26.15.3",
+    "electron": "^28.0.0",
+    "electron-builder": "^24.13.3",
     "typescript": "~6.0.2",
     "vite": "^8.1.1",
     "vite-plugin-electron": "^1.1.0",
