@@ -6,8 +6,8 @@
   "main": "dist-electron/index.js",
   "scripts": {
     "dev": "vite",
-    "build-win": "vite build && electron-builder --win",
-    "build-mac": "vite build && electron-builder --mac",
+    "build-win": "vite build && electron-builder --win --publish never",
+    "build-mac": "vite build && electron-builder --mac --publish never",
     "preview": "vite preview"
   },
   "build": {
@@ -29,7 +29,9 @@
     "mac": {
       "target": [
         "dmg"
-      ]
+      ],
+      "identity": null,
+      "notarize": false
     }
   },
   "dependencies": {
